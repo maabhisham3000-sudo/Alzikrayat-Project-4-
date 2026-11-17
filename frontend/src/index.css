@@ -1,0 +1,141 @@
+/* ==========================================================
+   Alzikrayat Global Responsive Full-Width Stylesheet
+   ========================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html, #root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  color: #333;
+  direction: ltr;
+  overflow-x: hidden;
+}
+
+/* الحاوية العامة لكل صفحة لتملأ الشاشة بالكامل */
+.page-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* حاوية المحتوى لتأخذ عرض الشاشة بالكامل مع مسافات متجاوبة مع الهواتف والشاشات */
+.content-wrapper {
+  width: 100%;
+  flex: 1;
+  padding: 40px 30px;
+  box-sizing: border-box;
+}
+
+/* الصناديق البيضاء والبطاقات تتكيف بمرونة مع عرض الشاشة */
+.card-box {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 40px;
+  margin-bottom: 35px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* شبكة عرض الصور (Grid) متجاوبة بالكامل تلقائياً مع الشاشات المختلفة */
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+/* كرت الصورة الفردي */
+.photo-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+
+.photo-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+/* الأزرار الموحدة */
+.btn-primary-custom {
+  background-color: #0d6efd;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.btn-primary-custom:hover {
+  background-color: #0b5ed7;
+}
+
+.btn-danger-custom {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-danger-custom:hover {
+  background-color: #bb2d3b;
+}
+
+/* الفوتر العام بعرض كامل */
+.footer-custom {
+  text-align: center;
+  padding: 20px 0;
+  color: #888;
+  font-size: 13px;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  width: 100%;
+  margin-top: auto;
+}
+
+/* ==========================================================
+   Responsive Design for Mobile & Tablets (تعديلات الشاشات الصغيرة)
+   ========================================================== */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 20px 15px; /* تقليل الهوامش الجانبية في الجوال لتوفير مساحة */
+  }
+
+  .card-box {
+    padding: 20px 15px; /* تصغير حشوة الصناديق للهواتف */
+  }
+
+  .photos-grid {
+    grid-template-columns: 1fr; /* عرض كرت واحد في كل صف على شاشات الجوال الصغيرة */
+    gap: 15px;
+  }
+}
