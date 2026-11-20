@@ -1,24 +1,23 @@
-# Alzikrayat - Full-Stack MERN Application
+Project Name:
+Alzikrayat (Project 3)
 
-Welcome to the "Alzikrayat" repository, a comprehensive photo-sharing and memory gallery web application built using the MERN stack to deliver a seamless and secure user experience.
+A simple Description:
+Alzikrayat is a full-stack photo-sharing web application built with the MERN stack for storing and sharing personal photos, memories, and comments. It provides user registration and login, responsive gallery browsing in grid or list view with public and private visibility controls, image uploads, photo detail views, profile management, and interactive comment creation, editing, and deletion.
 
-## Project Overview
-This project is structured around two main development modules:
-1. **Backend & API Architecture (Module 3):** Focuses on building the core server using Node.js and Express.js, managing database operations via MongoDB Atlas and Mongoose ODM, implementing secure user authentication using JSON Web Tokens (JWT), handling server-side input validation with Joi, and managing image uploads.
-2. **Frontend & User Experience (Module 4):** Focuses on building an interactive user interface using React.js and Vite, managing page routing, and connecting the client-side to the backend via Axios to provide a fully functional gallery and user dashboard.
+Technologies:
+MongoDB (MongoDB Atlas / Mongoose) | Express.js | React.js (Vite) | Node.js | React Router | Axios | Multer | bcryptjs | JSON Web Token (JWT) | Joi | HTML5 | CSS3 | JavaScript
 
-## Tech Stack
-* **Frontend:** React.js, Vite, React Router, Axios, CSS / Tailwind
-* **Backend:** Node.js, Express.js
-* **Database:** MongoDB Atlas, Mongoose ODM
-* **Security & Validation:** JWT Authentication, Joi, Bcrypt.js
+How to run:
 
-## Features
-* Secure user registration and login system with password hashing and route protection (JWT Authentication).
-* Photo upload capabilities with visibility controls and interactive memory gallery display.
-* Interactive commenting system allowing users to engage with memories, including owner-only deletion permissions.
-* Robust server-side input validation and data security.
+Clone the project repository from GitHub ([https://github.com/maabhisham3000-sudo/Alzikrayat-Project-3-.git](https://github.com/maabhisham3000-sudo/Alzikrayat-Project-3-.git)) and navigate into the project folder (cd alzikrayat2).
 
----
-**Developed by:** Maab Hisham  
-**Department:** Information Technology (IT)
+Open a terminal in the backend folder, run npm install to install dependencies, ensure the uploads directory exists, and create a .env file configured with PORT=5000 and your MONGODB_URI connection string.
+
+Start the backend server by running node server.js inside the backend folder and wait for the database connection and server startup confirmation on http://localhost:5000.
+
+Open a second terminal in the frontend folder and run npm install to install frontend dependencies.
+
+Start the Vite development server by running npm run dev inside the frontend folder, then open the local URL shown in the terminal (typically http://localhost:5173) in your web browser.
+
+Student Name: ماب هشام عبدالعظيم
+Department: تقانة المعلومات
