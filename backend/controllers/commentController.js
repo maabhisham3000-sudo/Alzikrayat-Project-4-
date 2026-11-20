@@ -5,9 +5,9 @@ exports.getCommentsByPhoto = async (req, res) => {
   try {
     const photoId = req.params.photoId || req.params.id;
     const comments = await Comment.find({ photoId }).sort({ createdAt: -1 });
-    res.json(comments);
+    return res.status(200).json(comments);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -16,8 +16,17 @@ exports.addComment = async (req, res) => {
   try {
     const photoId = req.params.photoId || req.params.id || req.body.photoId;
     const commentText = (req.body.text || req.body.comment || '').trim();
-    const userId = req.body.userId || 'anonymous';
-    const userName = req.body.userName || 'User';
+
+    const userId =
+      req.user?.id ||
+      req.user?._id ||
+      req.body.userId ||
+      'anonymous';
+
+    const userName =
+      req.user?.name ||
+      req.body.userName ||
+      (req.user?.email ? req.user.email.split('@')[0] : 'User');
 
     if (!photoId) {
       return res.status(400).json({ error: 'Photo ID is required' });
@@ -30,52 +39,74 @@ exports.addComment = async (req, res) => {
     const newComment = new Comment({
       photoId,
       text: commentText,
-      userId,
+      userId: String(userId),
       userName
     });
 
     await newComment.save();
-    res.status(201).json(newComment);
+    return res.status(201).json(newComment);
   } catch (err) {
     console.error('Add Comment Error:', err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
 // تعديل تعليق
 exports.updateComment = async (req, res) => {
   try {
+    const commentId = req.params.commentId || req.params.id;
     const commentText = (req.body.text || req.body.comment || '').trim();
+
     if (!commentText) {
       return res.status(400).json({ error: 'Comment text is required' });
     }
 
-    const updated = await Comment.findByIdAndUpdate(
-      req.params.commentId || req.params.id,
-      { text: commentText },
-      { new: true }
-    );
-
-    if (!updated) {
+    const existingComment = await Comment.findById(commentId);
+    if (!existingComment) {
       return res.status(404).json({ error: 'Comment not found' });
     }
 
-    res.json(updated);
+    const currentUserId = req.user?.id || req.user?._id || req.body.userId;
+    if (
+      currentUserId &&
+      existingComment.userId &&
+      existingComment.userId !== 'anonymous' &&
+      String(existingComment.userId) !== String(currentUserId)
+    ) {
+      return res.status(403).json({ error: 'You are not authorized to edit this comment' });
+    }
+
+    existingComment.text = commentText;
+    const updated = await existingComment.save();
+    return res.status(200).json(updated);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
 // حذف تعليق
 exports.deleteComment = async (req, res) => {
   try {
-    const deleted = await Comment.findByIdAndDelete(req.params.commentId || req.params.id);
-    if (!deleted) {
+    const commentId = req.params.commentId || req.params.id;
+    const existingComment = await Comment.findById(commentId);
+
+    if (!existingComment) {
       return res.status(404).json({ error: 'Comment not found' });
     }
 
-    res.json({ message: 'Comment deleted successfully' });
+    const currentUserId = req.user?.id || req.user?._id || req.body?.userId;
+    if (
+      currentUserId &&
+      existingComment.userId &&
+      existingComment.userId !== 'anonymous' &&
+      String(existingComment.userId) !== String(currentUserId)
+    ) {
+      return res.status(403).json({ error: 'You are not authorized to delete this comment' });
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+    return res.status(200).json({ message: 'Comment deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
