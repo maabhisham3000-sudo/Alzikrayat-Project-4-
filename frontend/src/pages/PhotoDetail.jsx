@@ -12,7 +12,7 @@ function PhotoDetail() {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   
-  // حالات تعديل التعليق
+
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editText, setEditText] = useState('');
 
@@ -67,7 +67,7 @@ function PhotoDetail() {
     }
   };
 
-  // حذف الصورة (متاح فقط لصاحب الصورة)
+  
   const handleDeletePhoto = async () => {
     if (!window.confirm("Are you sure you want to delete this memory?")) return;
     try {
@@ -80,7 +80,6 @@ function PhotoDetail() {
     }
   };
 
-  // حذف التعليق
   const handleDeleteComment = async (commentId, commentUserId) => {
     if (commentUserId && commentUserId !== currentUserId) {
       alert("You can only delete your own comments!");
@@ -100,7 +99,7 @@ function PhotoDetail() {
     }
   };
 
-  // تعديل التعليق
+
   const handleUpdateComment = async (commentId) => {
     if (!editText.trim()) return;
 
@@ -124,7 +123,7 @@ function PhotoDetail() {
     ? new Date(photo.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
     : 'Unknown Date';
 
-  // التحقق هل المستخدم الحالي هو مالك الصورة أم لا؟
+  
   const isPhotoOwner = user && (photo.userId === currentUserId || photo.userName === currentUserName);
 
   return (
@@ -133,7 +132,7 @@ function PhotoDetail() {
 
       <div style={{ maxWidth: '800px', margin: '30px auto', padding: '20px' }}>
         
-        {/* صندوق تفاصيل الصورة الرئيسي */}
+     
         <div style={{ background: '#fff', padding: '30px', borderRadius: '12px', border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', marginBottom: '30px', textAlign: 'center' }}>
           
           <h2 style={{ color: '#222', marginBottom: '20px', fontSize: '24px' }}>{photo.title}</h2>
@@ -146,7 +145,7 @@ function PhotoDetail() {
 
           <h4 style={{ color: '#333', marginBottom: '8px', fontSize: '18px' }}>{photo.title}</h4>
           
-          {/* تاريخ النشر واسم الناشر */}
+          
           <div style={{ fontSize: '13px', color: '#666', marginBottom: '20px', lineHeight: '1.6' }}>
             <div>Published date: {formattedDate}</div>
             <div>Publisher: <strong>{photo.userName || 'User'}</strong></div>
@@ -154,7 +153,7 @@ function PhotoDetail() {
 
           <p style={{ color: '#555', fontSize: '15px', lineHeight: '1.6', marginBottom: '25px' }}>{photo.description}</p>
           
-          {/* زر الحذف يظهر فقط لصاحب الصورة */}
+      
           {isPhotoOwner && (
             <div style={{ marginBottom: '20px' }}>
               <button 
@@ -176,7 +175,7 @@ function PhotoDetail() {
           </button>
         </div>
 
-        {/* صندوق التعليقات */}
+        
         <div style={{ background: '#fff', padding: '30px', borderRadius: '12px', border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
           <h4 style={{ marginBottom: '20px', color: '#333', fontSize: '18px' }}>Comments ({comments.length})</h4>
 
@@ -225,7 +224,7 @@ function PhotoDetail() {
                     <p style={{ margin: '5px 0 0 0', fontSize: '14px', color: '#333' }}>{c.text}</p>
                   )}
 
-                  {/* أزرار التعديل والحذف للتعليق تظهر لصاحبه فقط */}
+                
                   {user && isCommentOwner && editingCommentId !== c._id && (
                     <div style={{ display: 'flex', gap: '12px', marginTop: '8px', justifyContent: 'flex-end' }}>
                       <button 

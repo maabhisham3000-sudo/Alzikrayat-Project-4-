@@ -6,7 +6,7 @@ function About() {
     <div className="page-container">
       <Navbar />
       
-      {/* محتوى الصفحة يمتد بعرض الشاشة بالكامل */}
+    
       <div className="content-wrapper">
         <div className="card-box" style={{ textAlign: 'center' }}>
           <h1 style={{ color: '#2c3e50', marginBottom: '20px', fontSize: '28px' }}>About Alzikrayat</h1>
@@ -16,7 +16,7 @@ function About() {
         </div>
       </div>
 
-      {/* الفوتر العام */}
+   
       <footer className="footer-custom">
         All rights reserved &copy; 2026 - Alzikrayat Platform
       </footer>

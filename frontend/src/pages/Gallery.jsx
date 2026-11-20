@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 
 function Gallery() {
   const [photos, setPhotos] = useState([]);
+  const [viewMode, setViewMode] = useState('grid');
   const [stats, setStats] = useState({ commentsCount: 0, usersCount: 0, photosCount: 0 });
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -24,7 +25,7 @@ function Gallery() {
   const fetchGalleryData = async () => {
     try {
       const photosRes = await axios.get('http://localhost:5000/api/photos');
-      
+
       const filteredPhotos = photosRes.data.filter(photo => {
         if (photo.visibility === 'Private') {
           return user && (photo.userId === currentUserId || photo.userName === currentUserName);
@@ -100,15 +101,15 @@ function Gallery() {
       <Navbar />
 
       <div className="content-wrapper">
-        
-        {/* صندوق الترحيب العلوي */}
+
         <div className="card-box" style={{ textAlign: 'center' }}>
           <h2 style={{ color: '#222', marginBottom: '10px', fontSize: '26px' }}>📷 Welcome to Memories</h2>
           <p style={{ color: '#666', fontSize: '15px', marginBottom: '25px' }}>
             Your peaceful personal space to keep your personal photos and memories. Document your best moments and share them seamlessly and securely.
           </p>
           {user && (
-            <button 
+            <button
+              type="button"
               onClick={() => window.scrollTo({ top: 450, behavior: 'smooth' })}
               className="btn-primary-custom"
               style={{ width: 'auto', padding: '12px 28px' }}
@@ -118,7 +119,6 @@ function Gallery() {
           )}
         </div>
 
-        {/* إحصائيات المنصة */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '25px', marginBottom: '40px', width: '100%' }}>
           <div className="card-box" style={{ textAlign: 'center', margin: 0, padding: '25px' }}>
             <div style={{ fontSize: '24px', marginBottom: '8px' }}>💬</div>
@@ -137,48 +137,65 @@ function Gallery() {
           </div>
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
           <h3 style={{ margin: 0, color: '#333', fontSize: '20px' }}>Latest Memories</h3>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className="btn-primary-custom"
+              style={{ width: 'auto', padding: '8px 16px', background: viewMode === 'grid' ? '#0d6efd' : '#6c757d' }}
+            >
+              Grid View
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('list')}
+              className="btn-primary-custom"
+              style={{ width: 'auto', padding: '8px 16px', background: viewMode === 'list' ? '#0d6efd' : '#6c757d' }}
+            >
+              List View
+            </button>
+          </div>
         </div>
 
-        {/* نموذج رفع الصور */}
         {user ? (
           <div className="card-box">
             <h4 style={{ marginBottom: '20px', color: '#333', fontSize: '1.2rem' }}>Upload New Photo (Publisher: {currentUserName})</h4>
             <form onSubmit={handleSubmit}>
               <div style={{ marginBottom: '15px' }}>
-                <input 
-                  type="file" 
+                <input
+                  type="file"
                   accept="image/*"
-                  onChange={e => setImageFile(e.target.files[0])} 
-                  required 
+                  onChange={e => setImageFile(e.target.files[0])}
+                  required
                   style={{ display: 'block', width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '6px', background: '#f9f9f9' }}
                 />
               </div>
               <div style={{ marginBottom: '15px' }}>
-                <input 
-                  type="text" 
-                  placeholder="Title" 
-                  value={title} 
-                  onChange={e => setTitle(e.target.value)} 
-                  required 
+                <input
+                  type="text"
+                  placeholder="Title"
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                  required
                   style={{ display: 'block', width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }}
                 />
               </div>
               <div style={{ marginBottom: '15px' }}>
-                <textarea 
-                  placeholder="Description" 
+                <textarea
+                  placeholder="Description"
                   rows="3"
-                  value={description} 
-                  onChange={e => setDescription(e.target.value)} 
-                  required 
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  required
                   style={{ display: 'block', width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box', resize: 'vertical' }}
                 />
               </div>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold', color: '#555' }}>Visibility:</label>
-                <select 
-                  value={visibility} 
+                <select
+                  value={visibility}
                   onChange={e => setVisibility(e.target.value)}
                   style={{ width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '6px', fontSize: '14px', background: '#fff' }}
                 >
@@ -197,53 +214,81 @@ function Gallery() {
           </div>
         )}
 
-        {/* شبكة الصور */}
-        <div className="photos-grid">
-          {photos.map((photo) => (
-            <div key={photo._id} className="photo-card">
-              <span style={{
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-                background: photo.visibility === 'Private' ? '#dc3545' : '#198754',
-                color: '#fff',
-                padding: '4px 10px',
-                borderRadius: '4px',
-                fontSize: '11px',
-                fontWeight: 'bold',
-                zIndex: 2
-              }}>
-                {photo.visibility || 'Public'}
-              </span>
+        <div
+          className={viewMode === 'grid' ? 'photos-grid' : undefined}
+          style={
+            viewMode === 'list'
+              ? { display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '50px', width: '100%' }
+              : undefined
+          }
+        >
+          {photos.map((photo) => {
+            const imgSrc = photo.imageUrl
+              ? `http://localhost:5000/${photo.imageUrl}`
+              : photo.fileName
+                ? `http://localhost:5000/uploads/${photo.fileName}`
+                : null;
 
-              {photo.imageUrl && (
-                <img 
-                  src={`http://localhost:5000/${photo.imageUrl}`} 
-                  alt={photo.title} 
-                  onClick={() => navigate(`/photo/${photo._id}`)}
-                />
-              )}
-              <div style={{ padding: '18px', display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
-                <h5 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: 'bold', color: '#333' }}>{photo.title}</h5>
-                <p style={{ margin: '0 0 12px 0', fontSize: '13px', color: '#666', flexGrow: '1' }}>
-                  {photo.description}
-                </p>
-                <div style={{ fontSize: '12px', color: '#888', marginBottom: '12px' }}>
-                  By: <strong>{photo.userName || 'User'}</strong>
-                </div>
-                
-                <div style={{ borderTop: '1px solid #eee', paddingTop: '12px' }}>
-                  <button 
+            return (
+              <div
+                key={photo._id}
+                className="photo-card"
+                style={
+                  viewMode === 'list'
+                    ? { flexDirection: 'row', alignItems: 'center', gap: '16px', padding: '12px' }
+                    : undefined
+                }
+              >
+                <span style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  background: photo.visibility === 'Private' ? '#dc3545' : '#198754',
+                  color: '#fff',
+                  padding: '4px 10px',
+                  borderRadius: '4px',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  zIndex: 2
+                }}>
+                  {photo.visibility || 'Public'}
+                </span>
+
+                {imgSrc && (
+                  <img
+                    src={imgSrc}
+                    alt={photo.title}
                     onClick={() => navigate(`/photo/${photo._id}`)}
-                    className="btn-primary-custom"
-                    style={{ background: '#212529', padding: '10px' }}
-                  >
-                    Details
-                  </button>
+                    style={
+                      viewMode === 'list'
+                        ? { width: '140px', height: '100px', objectFit: 'cover', borderRadius: '6px', flexShrink: 0 }
+                        : undefined
+                    }
+                  />
+                )}
+                <div style={{ padding: viewMode === 'list' ? '4px 8px' : '18px', display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
+                  <h5 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: 'bold', color: '#333' }}>{photo.title}</h5>
+                  <p style={{ margin: '0 0 12px 0', fontSize: '13px', color: '#666', flexGrow: '1' }}>
+                    {photo.description}
+                  </p>
+                  <div style={{ fontSize: '12px', color: '#888', marginBottom: '12px' }}>
+                    By: <strong>{photo.userName || 'User'}</strong>
+                  </div>
+
+                  <div style={{ borderTop: '1px solid #eee', paddingTop: '12px' }}>
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/photo/${photo._id}`)}
+                      className="btn-primary-custom"
+                      style={{ background: '#212529', padding: '10px', width: viewMode === 'list' ? 'auto' : '100%', paddingInline: '20px' }}
+                    >
+                      Details
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>
