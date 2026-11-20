@@ -20,7 +20,7 @@ function Login() {
       login(res.data.user, res.data.token);
       navigate('/gallery');
     } catch (err) {
-      alert(err.response?.data?.error || "Login failed");
+      alert(err.response?.data?.error || 'Login failed');
     }
   };
 
@@ -31,28 +31,32 @@ function Login() {
       <div className="content-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div className="card-box" style={{ maxWidth: '500px', width: '100%' }}>
           <h2 style={{ textAlign: 'center', marginBottom: '25px', color: '#222' }}>Login to Alzikrayat</h2>
-          
+
           <form onSubmit={handleLogin}>
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '14px', color: '#555' }}>Email Address</label>
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                value={email} 
-                onChange={e => setEmail(e.target.value)} 
-                required 
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '14px', color: '#555' }}>
+                Email Address
+              </label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
                 style={{ width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }}
               />
             </div>
 
             <div style={{ marginBottom: '25px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '14px', color: '#555' }}>Password</label>
-              <input 
-                type="password" 
-                placeholder="Enter your password" 
-                value={password} 
-                onChange={e => setPassword(e.target.value)} 
-                required 
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '14px', color: '#555' }}>
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
                 style={{ width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }}
               />
             </div>
@@ -63,7 +67,10 @@ function Login() {
           </form>
 
           <div style={{ textAlign: 'center', fontSize: '14px', color: '#666' }}>
-            Don't have an account? <Link to="/register" style={{ color: '#0d6efd', fontWeight: 'bold' }}>Register</Link>
+            Don&apos;t have an account?{' '}
+            <Link to="/register" style={{ color: '#0d6efd', fontWeight: 'bold' }}>
+              Register
+            </Link>
           </div>
         </div>
       </div>
