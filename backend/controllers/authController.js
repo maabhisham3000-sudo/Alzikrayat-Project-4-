@@ -1,81 +1,106 @@
-const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-exports.register = async (req, res) => {
+const generateToken = (user) => {
+  const fullName =
+    user.name ||
+    [user.firstName, user.lastName].filter(Boolean).join(' ').trim() ||
+    (user.email ? user.email.split('@')[0] : 'User');
+
+  return jwt.sign(
+    {
+      id: user._id.toString(),
+      name: fullName,
+      firstName: user.firstName || fullName.split(' ')[0],
+      email: user.email
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+  );
+};
+
+const formatUserResponse = (user) => {
+  const fullName =
+    user.name ||
+    [user.firstName, user.lastName].filter(Boolean).join(' ').trim() ||
+    (user.email ? user.email.split('@')[0] : 'User');
+
+  return {
+    id: user._id,
+    _id: user._id,
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    name: fullName,
+    email: user.email,
+    city: user.city || '',
+    occupation: user.occupation || ''
+  };
+};
+
+exports.register = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password, location, description, occupation, city } = req.body;
+    const { firstName, lastName, email, password, city, occupation } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({ error: 'Email is already registered.' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
 
-    const user = new User({
-      firstName,
-      lastName,
-      email,
+    const newUser = await User.create({
+      firstName: firstName?.trim(),
+      lastName: lastName?.trim(),
+      name: fullName || email.split('@')[0],
+      email: email.toLowerCase().trim(),
       password: hashedPassword,
-      location: location || city || '',
-      description: description || '',
-      occupation: occupation || ''
+      city: city?.trim() || '',
+      occupation: occupation?.trim() || ''
     });
 
-    await user.save();
-    res.status(201).json({
-      message: 'User registered successfully',
-      user: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        location: user.location,
-        description: user.description,
-        occupation: user.occupation
-      }
+    const token = generateToken(newUser);
+    return res.status(201).json({
+      message: 'Account created successfully.',
+      user: formatUserResponse(newUser),
+      token
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return next(err);
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    res.json({
-      user: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        location: user.location,
-        description: user.description,
-        occupation: user.occupation
-      }
+    const token = generateToken(user);
+    return res.status(200).json({
+      message: 'Logged in successfully.',
+      user: formatUserResponse(user),
+      token
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return next(err);
   }
 };
 
-exports.getUsersCount = async (req, res) => {
+exports.getUsersCount = async (req, res, next) => {
   try {
     const count = await User.countDocuments();
-    res.json({ count });
+    return res.status(200).json({ count });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return next(err);
   }
 };
