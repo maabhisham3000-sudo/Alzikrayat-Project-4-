@@ -1,20 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { 
-    getCommentsByPhotoId, 
-    addComment, 
-    updateComment, 
-    deleteComment 
-} = require('../controllers/commentController');
-const auth = require('../middleware/auth'); // استيراد وسيط الحماية
-const { validateComment } = require('../middleware/validation'); // التحقق بـ Joi
+const commentController = require('../controllers/commentController');
 
-// المسارات العامة
-router.get('/:photoId', getCommentsByPhotoId);
-
-// المسارات المحمية تتطلب توكن
-router.post('/', auth, validateComment, addComment);
-router.put('/:id', auth, updateComment);
-router.delete('/:id', auth, deleteComment);
+router.get('/:photoId', commentController.getCommentsByPhoto);
+router.post('/', commentController.addComment);
+router.put('/:commentId', commentController.updateComment);
+router.delete('/:commentId', commentController.deleteComment);
 
 module.exports = router;
