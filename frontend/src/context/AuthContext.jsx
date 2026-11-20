@@ -2,30 +2,24 @@ import React, { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        setUser(null);
-      }
+    const savedUser = localStorage.getItem('alzikrayat_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
     }
   }, []);
 
   const login = (userData) => {
-    // التقاط كائن المستخدم سواء كان داخل حقل user أو مرسلاً مباشرة
-    const userInfo = userData.user || userData;
-    setUser(userInfo);
-    localStorage.setItem('user', JSON.stringify(userInfo));
+    setUser(userData);
+    localStorage.setItem('alzikrayat_user', JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem('alzikrayat_user');
   };
 
   return (
@@ -33,6 +27,4 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export default AuthContext;
+}

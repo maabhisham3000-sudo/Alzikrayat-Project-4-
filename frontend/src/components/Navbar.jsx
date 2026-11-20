@@ -11,41 +11,94 @@ function Navbar() {
     navigate('/login');
   };
 
-  const displayName = user?.name || user?.username || (user?.email ? user.email.split('@')[0] : '');
-
   return (
-    <header style={{ background: '#0d6efd', color: '#fff', padding: '15px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-      <div style={{ fontSize: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span>📷 Alzikrayat</span>
-      </div>
-      <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-        <Link to="/home" style={{ color: '#fff', textDecoration: 'none', fontSize: '15px' }}>Home</Link>
-        <Link to="/gallery" style={{ color: '#fff', textDecoration: 'none', fontSize: '15px' }}>Gallery</Link>
-        <Link to="/about" style={{ color: '#fff', textDecoration: 'none', fontSize: '15px' }}>About</Link>
-        
+    <nav
+      style={{
+        width: '100%',
+        backgroundColor: '#0d6efd',
+        color: '#fff',
+        padding: '14px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        boxSizing: 'border-box',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+      }}
+    >
+      {/* شعار المنصة */}
+      <Link
+        to="/"
+        style={{
+          color: '#fff',
+          textDecoration: 'none',
+          fontSize: '20px',
+          fontWeight: 'bold',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}
+      >
+        📷 Alzikrayat
+      </Link>
+
+      {/* الروابط وحالة تسجيل الدخول */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '15px',
+          fontSize: '15px'
+        }}
+      >
+        <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link>
+        <Link to="/gallery" style={{ color: '#fff', textDecoration: 'none' }}>Gallery</Link>
+        <Link to="/about" style={{ color: '#fff', textDecoration: 'none' }}>About</Link>
+        {user && (
+          <Link to="/profile" style={{ color: '#fff', textDecoration: 'none' }}>Profile</Link>
+        )}
+
         {user ? (
-          <>
-            <Link to="/profile" style={{ color: '#fff', textDecoration: 'none', fontSize: '15px' }}>Profile</Link>
-            <span style={{ color: '#ffc107', fontSize: '15px', fontWeight: '600' }}>
-              Hi, {displayName}
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+            <span style={{ color: '#ffd43b', fontWeight: 'bold' }}>
+              Hi, {user.firstName || user.name || 'User'}
             </span>
-            <button 
-              onClick={handleLogout} 
-              style={{ background: '#dc3545', color: '#fff', border: 'none', padding: '6px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px' }}
+            <button
+              onClick={handleLogout}
+              style={{
+                backgroundColor: '#dc3545',
+                color: '#fff',
+                border: 'none',
+                padding: '6px 14px',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '13px'
+              }}
             >
               Logout
             </button>
-          </>
+          </div>
         ) : (
-          <button 
-            onClick={() => navigate('/login')} 
-            style={{ background: '#212529', color: '#fff', border: 'none', padding: '6px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px' }}
+          <Link
+            to="/login"
+            style={{
+              backgroundColor: '#fff',
+              color: '#0d6efd',
+              textDecoration: 'none',
+              padding: '6px 14px',
+              borderRadius: '5px',
+              fontWeight: 'bold',
+              fontSize: '13px'
+            }}
           >
-            Login
-          </button>
+            Please Login
+          </Link>
         )}
-      </nav>
-    </header>
+      </div>
+    </nav>
   );
 }
 
